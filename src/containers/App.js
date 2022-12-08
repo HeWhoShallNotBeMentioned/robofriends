@@ -20,14 +20,27 @@ function App() {
   //   this.setState({ robots: users });
   // }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(
+        'https://jsonplaceholder.typicode.com/users'
+      );
+      let users = await response.json();
+      setRobot(users);
+    };
+    fetchData();
+  }, []);
+
   const onSearchChange = (event) => {
     setSearchField(event.target.value);
   };
+  let filteredRobots;
+  if (robots) {
+    filteredRobots = robots.filter((robot) => {
+      return robot.name.toLocaleLowerCase().includes(searchfield.toLowerCase());
+    });
+  }
 
-  const filteredRobots = robots.filter((robot) => {
-    return robot.name.toLocaleLowerCase().includes(searchfield.toLowerCase());
-  });
-  console.log(robots, searchfield);
   if (!robots.length) {
     return <h1>Loading...</h1>;
   } else {
